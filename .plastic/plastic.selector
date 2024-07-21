@@ -1,0 +1,4 @@
+repository "mobdeve_mco@charles_hinolan@cloud"
+  path "/"
+    br "/main"
+    co "/main"
