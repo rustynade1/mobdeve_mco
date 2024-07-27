@@ -18,14 +18,14 @@ public class EnemyTurns : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Load all sprites from the specified folder
+        
         sprites = Resources.LoadAll<Sprite>(enemySpriteFolder);
 
-        // Get the SpriteRenderer component
+        
         spriteRenderer = GetComponent<SpriteRenderer>();
 
 
-        // Initial sprite assignment
+        
         UpdateSprite();
     }
 
@@ -34,6 +34,7 @@ public class EnemyTurns : MonoBehaviour
     {
         if (enemyHealthBar.hp <= 0)
         {
+            //switch in new enemy with full health
             CycleSprite();
             enemyHealthBar.FullRestore();
         }
@@ -71,10 +72,10 @@ public class EnemyTurns : MonoBehaviour
         currentSpriteIndex++;
         if (currentSpriteIndex >= sprites.Length)
         {
-            currentSpriteIndex = 0; // Wrap around to the first sprite
+            currentSpriteIndex = 0; 
         }
 
-        // Update the sprite
+        
         UpdateSprite();
     }
 
