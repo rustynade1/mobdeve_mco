@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RandomLetters : MonoBehaviour
 {
+    
     //name of letter folder
     public string letterFolder = "Letters";
    
@@ -16,32 +19,34 @@ public class RandomLetters : MonoBehaviour
 
     //adjusting letter sprite size
     public Vector3 spriteScale = new Vector3(0.25f, 0.25f, 1.0f);
+
     //spacing for formatting
     public float spacing = 0.5f;
 
     //reshuffle button (tentative)
     public Button reshuffleButton;
-    public Button otherButton;
+    //public Button otherButton;
     public Button eraseButton;
 
     // dictionary for tile mapping
     public Dictionary<string, (int value, char character)> letterMap;
 
-    private List<TileDetails> clickedTileDetails = new List<TileDetails>();
+    public List<TileDetails> clickedTileDetails = new List<TileDetails>();
 
-    private List<GameObject> clonedTiles = new List<GameObject>();
-    public Vector3 cloneStartPos = new Vector3(5.0f, 1.5f, 0);
+    public List<GameObject> clonedTiles = new List<GameObject>();
+    public Vector3 cloneStartPos = new Vector3(-5.0f, -2.1f, 0);
     private Vector3 nextClonePos;
 
     //for verifying a word and determining its score
-    private Animator animator;
+    //public Animator animator;
     public string wordSpelled;
     public int wordScore;
     public SpellChecker spellChecker;
     public bool isValid;//not needed?
 
     public static RandomLetters instance;
-    
+
+    public EnemyTurns enemyTurns;
     void Awake()
     {
         if (instance == null)
@@ -63,7 +68,7 @@ public class RandomLetters : MonoBehaviour
        wordSpelled = string.Empty;
        wordScore = 0;
        spellChecker = new SpellChecker();
-       animator = GetComponent<Animator>();
+       //animator = GetComponent<Animator>();
 
         for (int i = 0; i < 16; i++){
 
@@ -85,8 +90,9 @@ public class RandomLetters : MonoBehaviour
          letterGrid[i].transform.localScale = spriteScale;
 
          //adjust position
-         float x = ((i%4) * spacing)+1f;//i%4
-         float y = (-((i)/4) * spacing)-2;
+         //float x = ((i%4) * spacing)+1f;//i%4
+         float x = (i % 4)-5.3f;
+         float y = (-((i)/4) * spacing)-3;
          letterGrid[i].transform.position = new Vector3(x, y, 0);
 
          BoxCollider2D collider = letterGrid[i].GetComponent<BoxCollider2D>();
@@ -102,12 +108,9 @@ public class RandomLetters : MonoBehaviour
         {
             reshuffleButton.onClick.AddListener(ReshuffleLetters);
             
-        }
-       if(otherButton != null)
-        {
-            otherButton.onClick.AddListener(PrintClickedTileDetails);
             
         }
+
        if(eraseButton != null)
         {
             eraseButton.onClick.AddListener(ResetSelection);
@@ -118,7 +121,54 @@ public class RandomLetters : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-  
+        
+    }
+
+    void AdjustLength(List<GameObject> clonedTiles) 
+    {
+        float multiplier1 = 0.6f;
+        float multiplier2 = 0.9f;
+        if (clonedTiles.Count == 7)
+        {
+            spacing *= multiplier1;
+            spriteScale *= multiplier1;
+
+            nextClonePos = cloneStartPos;
+            for (int i = 0; i < clonedTiles.Count; i++)
+            {
+                GameObject sprite = clonedTiles[i];
+                sprite.transform.localScale = spriteScale;
+                sprite.transform.position = nextClonePos;
+
+                nextClonePos.x += spacing;
+            }
+        }
+        if(clonedTiles.Count == 10)
+        {
+            spacing*= multiplier1;
+            nextClonePos = cloneStartPos;
+            for(int i = 0;i < clonedTiles.Count; i++)
+            {
+                GameObject sprite = clonedTiles[i];
+                sprite.transform.localScale = spriteScale;
+                sprite.transform.position = nextClonePos;
+
+                nextClonePos.x += spacing;
+            }
+        }
+        if (clonedTiles.Count == 14)
+        {
+            spacing *= multiplier2;
+            nextClonePos = cloneStartPos;
+            for (int i = 0; i < clonedTiles.Count; i++)
+            {
+                GameObject sprite = clonedTiles[i];
+                sprite.transform.localScale = spriteScale;
+                sprite.transform.position = nextClonePos;
+
+                nextClonePos.x += spacing;
+            }
+        }
     }
 
     void ReshuffleLetters()
@@ -130,6 +180,10 @@ public class RandomLetters : MonoBehaviour
                 SpriteRenderer spriteRenderer = letterGrid[i].GetComponent<SpriteRenderer>();
                 Sprite randomLetter = GetRandomLetter();
                 spriteRenderer.sprite = randomLetter;
+
+                Color color = spriteRenderer.color;
+                color.a = 1.0f;
+                spriteRenderer.color = color;
 
                 LetterValues letterValues = letterGrid[i].GetComponent<LetterValues>();
                 (int val, char character) letterInfo = GetSpriteInfo(randomLetter.name);
@@ -146,6 +200,11 @@ public class RandomLetters : MonoBehaviour
         RemoveClones();
         wordSpelled = string.Empty;
         wordScore = 0;
+        spacing = 0.5f;
+        spriteScale = new Vector3(0.4f, 0.4f, 1.0f);
+
+        enemyTurns.DamagePlayer();
+        
     }
    
     Sprite GetRandomLetter()
@@ -213,12 +272,25 @@ public class RandomLetters : MonoBehaviour
     {
         LetterValues letterValues = tile.GetComponent<LetterValues>();
         SaveTileDetail(letterValues.sprite, letterValues.val, letterValues.character);
-        wordSpelled = wordSpelled + letterValues.character;
+        if(letterValues.character == 'q')
+        {
+            wordSpelled = wordSpelled + "qu";
+        }
+        else
+        {
+            wordSpelled = wordSpelled + letterValues.character;
+        }
+        
         wordScore = wordScore + letterValues.val;
         Debug.Log($"Current word:{wordSpelled}");
         DuplicateTile(tile);
 
         tile.GetComponent<BoxCollider2D>().enabled = false;
+
+        SpriteRenderer spriteRenderer = tile.GetComponent<SpriteRenderer>();
+        Color color = spriteRenderer.color;
+        color.a = 0.3f; 
+        spriteRenderer.color = color;
     }
 
     public void SaveTileDetail(Sprite sprite, int value, char character)
@@ -239,7 +311,12 @@ public class RandomLetters : MonoBehaviour
             if (spellChecker.CheckWord(wordSpelled))
             {
                 Debug.Log($"Word is valid, Score is {wordScore}");
-                PlayValidWordAnimation(true);
+                int playerDamage = wordScore;
+                PlayerAnimLogic.instance.PlayValidWordAnimation();
+                ReplaceValidLetters();
+                
+                enemyTurns.DamageEnemy(playerDamage);
+               
 
             }
             else
@@ -253,41 +330,53 @@ public class RandomLetters : MonoBehaviour
         }
     }
 
-    public void PlayValidWordAnimation(bool isValid)
+
+    public void ReplaceValidLetters()
     {
-        Debug.Log("i am called");
-        if (animator != null)
+        clickedTileDetails.Clear();
+        RemoveClones();
+        wordSpelled = string.Empty;
+        wordScore = 0;
+        spacing = 0.5f;
+        spriteScale = new Vector3(0.4f, 0.4f, 1.0f);
+        for (int i = 0; i < 16; i++) 
         {
-            animator.SetBool("WordValid", isValid);
-            // Optionally, reset the trigger after the animation plays
-            StartCoroutine(ResetAnimationTrigger());
+            SpriteRenderer spriteRenderer = letterGrid[i].GetComponent<SpriteRenderer>();
+            Color color = spriteRenderer.color;
+            if (Mathf.Approximately(color.a, 0.3f))
+            {
+                Sprite randomLetter = GetRandomLetter();
+                spriteRenderer.sprite = randomLetter;
+                color.a = 1.0f;
+                spriteRenderer.color = color;
+
+                LetterValues letterValues = letterGrid[i].GetComponent<LetterValues>();
+                (int val, char character) letterInfo = GetSpriteInfo(randomLetter.name);
+                letterValues.SetLetterValues(randomLetter, letterInfo.val, letterInfo.character);
+
+                BoxCollider2D collider = letterGrid[i].GetComponent<BoxCollider2D>();
+                if (collider != null)
+                {
+                    collider.enabled = true;
+                }
+            }
         }
     }
-
-    private System.Collections.IEnumerator ResetAnimationTrigger()
-    {
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-        animator.SetBool("WordValid", false);
-    }
-
-    public void HandleValidWordAnimation()
-    {
-        Debug.Log("Handling valid word animation in RandomLetters script!");
-        //me when chatgpt, pls delete
-        
-    }
-
-    
-
     public void ResetSelection()
     {
         clickedTileDetails.Clear();
         RemoveClones();
         wordSpelled = string.Empty;
         wordScore = 0;
+        spacing = 0.5f;
+        spriteScale = new Vector3(0.4f, 0.4f, 1.0f);
         for (int i = 0; i < 16; i++)
         {
+            SpriteRenderer spriteRenderer = letterGrid[i].GetComponent<SpriteRenderer>();
             BoxCollider2D collider = letterGrid[i].GetComponent<BoxCollider2D>();
+            Color color = spriteRenderer.color;
+            color.a = 1.0f;
+            spriteRenderer.color = color;
             if (collider != null)
             {
                 collider.enabled = true;
@@ -303,6 +392,7 @@ public class RandomLetters : MonoBehaviour
         nextClonePos.x += spacing;
 
         clonedTiles.Add(tileClone);
+        AdjustLength(clonedTiles);
     }
 
     public void RemoveClones()
