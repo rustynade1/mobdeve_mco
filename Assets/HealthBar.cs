@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Health-related functions
 public class HealthBar : MonoBehaviour
 {
     public Slider healthBar;

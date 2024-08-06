@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+//Data model for tiles
 public class TileDetails : MonoBehaviour
 {
     public Sprite sprite;

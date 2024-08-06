@@ -1,13 +1,14 @@
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+//using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RandomLetters : MonoBehaviour
 {
-    
+    //This was meant to just be the script to generate the letters but it's also basically the GameController
+
     //name of letter folder
     public string letterFolder = "Letters";
    
@@ -21,31 +22,29 @@ public class RandomLetters : MonoBehaviour
     public Vector3 spriteScale = new Vector3(0.25f, 0.25f, 1.0f);
 
     //spacing for formatting
-    public float spacing = 0.5f;
+    public float spacing = 0.4f;
 
-    //reshuffle button (tentative)
+    //Shuffling and erasing formed word
     public Button reshuffleButton;
-    //public Button otherButton;
     public Button eraseButton;
 
-    // dictionary for tile mapping
+    // Dictionary for determining characters and their respective scores
     public Dictionary<string, (int value, char character)> letterMap;
-
     public List<TileDetails> clickedTileDetails = new List<TileDetails>();
 
+    // When a tile is clicked, it is cloned to let the player see the word formed
     public List<GameObject> clonedTiles = new List<GameObject>();
-    public Vector3 cloneStartPos = new Vector3(-5.0f, -2.1f, 0);
+    public Vector3 cloneStartPos = new Vector3(-4.8f, -2.5f, 0);
     private Vector3 nextClonePos;
 
-    //for verifying a word and determining its score
-    //public Animator animator;
+    //for verifying a word and determining its score (API did not work on mobile)
     public string wordSpelled;
     public int wordScore;
-    public SpellChecker spellChecker;
-    public bool isValid;//not needed?
+    //public SpellChecker spellChecker; - Does not work on mobile unfortunately
 
+
+    // Modules containing battle functions
     public static RandomLetters instance;
-
     public EnemyTurns enemyTurns;
     void Awake()
     {
@@ -67,8 +66,6 @@ public class RandomLetters : MonoBehaviour
        nextClonePos = cloneStartPos;
        wordSpelled = string.Empty;
        wordScore = 0;
-       spellChecker = new SpellChecker();
-       //animator = GetComponent<Animator>();
 
         for (int i = 0; i < 16; i++){
 
@@ -86,13 +83,13 @@ public class RandomLetters : MonoBehaviour
 
          (int val, char character) letterInfo = GetSpriteInfo(randomLetter.name);
          letterValues.SetLetterValues(randomLetter,letterInfo.val,letterInfo.character);
+
          //resize
          letterGrid[i].transform.localScale = spriteScale;
 
          //adjust position
-         //float x = ((i%4) * spacing)+1f;//i%4
-         float x = (i % 4)-5.3f;
-         float y = (-((i)/4) * spacing)-3;
+         float x = (i % 4)-5.1f;
+         float y = (-((i)/4) * spacing)-3.3f;
          letterGrid[i].transform.position = new Vector3(x, y, 0);
 
          BoxCollider2D collider = letterGrid[i].GetComponent<BoxCollider2D>();
@@ -124,6 +121,7 @@ public class RandomLetters : MonoBehaviour
         
     }
 
+    //scales the formed word properly
     void AdjustLength(List<GameObject> clonedTiles) 
     {
         float multiplier1 = 0.6f;
@@ -171,6 +169,7 @@ public class RandomLetters : MonoBehaviour
         }
     }
 
+    //the shuffling function
     void ReshuffleLetters()
     {
         for (int i = 0;i < 16; i++)
@@ -207,12 +206,14 @@ public class RandomLetters : MonoBehaviour
         
     }
    
+    //function for generating letters on the grid
     Sprite GetRandomLetter()
     {
         int randomIndex = Random.Range(0, letterList.Count);
         return letterList[randomIndex];
     }
 
+    //function/s for assigning scores to letters
     void InitializeLetterMappings()
     {
         letterMap = new Dictionary<string, (int value, char character)>();
@@ -300,16 +301,17 @@ public class RandomLetters : MonoBehaviour
         
     }
 
+    //function responsible for checking if a word is valid, then attacking the enemy
     public void PrintClickedTileDetails()
     {
         foreach (var detail in clickedTileDetails)
         {
             Debug.Log($"Sprite: {detail.sprite.name}, Value: {detail.value}, Character: {detail.character}");
         }
-        if (spellChecker != null)
-        {
-            if (spellChecker.CheckWord(wordSpelled))
-            {
+        //if (spellChecker != null)
+        //{
+            //if (spellChecker.CheckWord(wordSpelled))
+            //{
                 Debug.Log($"Word is valid, Score is {wordScore}");
                 int playerDamage = wordScore;
                 PlayerAnimLogic.instance.PlayValidWordAnimation();
@@ -318,19 +320,19 @@ public class RandomLetters : MonoBehaviour
                 enemyTurns.DamageEnemy(playerDamage);
                
 
-            }
-            else
-            {
-                Debug.Log($"Word is NOT valid");
-            }
-        }
-        else
-        {
-            Debug.LogError("spellChecker is not initialized!");
-        }
+            //}
+            //else
+            //{
+            //    Debug.Log($"Word is NOT valid");
+            //}
+        //}
+        //else
+        //{
+        //    Debug.LogError("spellChecker is not initialized!");
+        //}
     }
 
-
+    //function responsible for replacing used letters with random ones
     public void ReplaceValidLetters()
     {
         clickedTileDetails.Clear();
@@ -362,6 +364,8 @@ public class RandomLetters : MonoBehaviour
             }
         }
     }
+
+    //called when the erase button is clicked
     public void ResetSelection()
     {
         clickedTileDetails.Clear();
@@ -384,17 +388,19 @@ public class RandomLetters : MonoBehaviour
         }
     }
 
+    //function responsible for cloning selected tiles
     public void DuplicateTile(GameObject origTile) 
     {
         GameObject tileClone = Instantiate(origTile);
         tileClone.transform.localScale = spriteScale;
         tileClone.transform.position = nextClonePos;
         nextClonePos.x += spacing;
-
+        tileClone.GetComponent<BoxCollider2D>().enabled = false;
         clonedTiles.Add(tileClone);
         AdjustLength(clonedTiles);
     }
 
+    //helper function for erasing/replacing tiles
     public void RemoveClones()
     {
         foreach (GameObject clone in clonedTiles)

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//Honestly have no idea, but I think this is just a helper class for clicking letters
 public class LetterValues : MonoBehaviour
 {
     public Sprite sprite;
@@ -35,11 +34,7 @@ public class LetterValues : MonoBehaviour
     private void HandleClick()
     {
         Debug.Log($"Tile clicked: {character}, Value: {val}");
-        //randomLetters.SaveTileDetail(sprite, val, character);
-        //if (randomLetters != null)
-        //{
-        //    randomLetters.DuplicateTile(gameObject);
-        //}
+
         if (randomLetters != null)
         {
             randomLetters.TileClicked(gameObject);

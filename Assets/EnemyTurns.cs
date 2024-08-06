@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,16 +13,15 @@ public class EnemyTurns : MonoBehaviour
     private Sprite[] sprites;
     private int currentSpriteIndex = 0;
     private SpriteRenderer spriteRenderer;
-
-
-    
+   
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
         
         sprites = Resources.LoadAll<Sprite>(enemySpriteFolder);
 
-        
+        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
 
@@ -41,6 +40,7 @@ public class EnemyTurns : MonoBehaviour
         }
     }
     
+    //enemy damage is 1-7
     public void DamagePlayer()
     {
         int minDmg = 1;
@@ -49,7 +49,7 @@ public class EnemyTurns : MonoBehaviour
         playerHealthBar.TakeDamage(damage);
 
     }
-
+    // Both start at 30hp, player heals 10hp after each kill
     public void DamageEnemy(int wordScore)
     {
         enemyHealthBar.TakeDamage(wordScore);
@@ -62,6 +62,12 @@ public class EnemyTurns : MonoBehaviour
         else
         {
             playerHealthBar.Heal(10);
+            //preventing overheal
+            if(playerHealthBar.hp >= 30)
+            {
+                playerHealthBar.hp = 30;
+            }
+            
 
         }
         
@@ -69,23 +75,22 @@ public class EnemyTurns : MonoBehaviour
 
     void CycleSprite()
     {
+        
         // Increment the sprite index
         currentSpriteIndex++;
+        
         if (currentSpriteIndex >= sprites.Length)
         {
             currentSpriteIndex = 0; 
         }
 
-        
         UpdateSprite();
+
     }
 
     void UpdateSprite()
     {
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.sprite = sprites[currentSpriteIndex];
-        }
 
+        animator.SetInteger("SpriteIndex", currentSpriteIndex);
     }
 }
