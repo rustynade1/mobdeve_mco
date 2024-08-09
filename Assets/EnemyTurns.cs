@@ -8,13 +8,15 @@ public class EnemyTurns : MonoBehaviour
 {
     public HealthBar playerHealthBar;
     public HealthBar enemyHealthBar;
+    
 
     public string enemySpriteFolder = "Enemies/Dummy";
     private Sprite[] sprites;
     private int currentSpriteIndex = 0;
-    public bool isDead = false;
     private SpriteRenderer spriteRenderer;
-   
+    private Text scoreText;
+    private int scoreCount = 0;
+
     private Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -25,8 +27,8 @@ public class EnemyTurns : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        scoreText = GameObject.FindGameObjectWithTag("ScoreText").GetComponent<Text>();
 
-        
         UpdateSprite();
     }
 
@@ -54,9 +56,9 @@ public class EnemyTurns : MonoBehaviour
     public void DamageEnemy(int wordScore)
     {
         enemyHealthBar.TakeDamage(wordScore);
-        
-        
-        if(enemyHealthBar.hp >= 1)
+        UpdateScore(wordScore);
+
+        if (enemyHealthBar.hp >= 1)
         {
             DamagePlayer();
         }
@@ -72,6 +74,12 @@ public class EnemyTurns : MonoBehaviour
 
         }
         
+    }
+
+    void UpdateScore(int wordScore)
+    {
+        scoreCount += wordScore;
+        scoreText.text = "Score: " + Mathf.Round(scoreCount);
     }
 
     void CycleSprite()
