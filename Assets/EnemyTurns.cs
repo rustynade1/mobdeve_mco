@@ -12,6 +12,7 @@ public class EnemyTurns : MonoBehaviour
     public string enemySpriteFolder = "Enemies/Dummy";
     private Sprite[] sprites;
     private int currentSpriteIndex = 0;
+    public bool isDead = false;
     private SpriteRenderer spriteRenderer;
    
     private Animator animator;
@@ -33,7 +34,7 @@ public class EnemyTurns : MonoBehaviour
     void Update()
     {
         if (enemyHealthBar.hp <= 0)
-        {
+        {   
             //switch in new enemy with full health
             CycleSprite();
             enemyHealthBar.FullRestore();
