@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartEndless()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadSceneAsync(2);
     }
 
     public void ExitGame()
