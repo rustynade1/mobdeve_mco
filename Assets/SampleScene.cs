@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartScreen : MonoBehaviour
+public class SampleScene : MonoBehaviour
 {
-    public void StartGame()
+    public void MenuReturn()
     {
         SceneManager.LoadSceneAsync(0);
     }
