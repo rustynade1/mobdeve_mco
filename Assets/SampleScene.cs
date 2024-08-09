@@ -7,6 +7,6 @@ public class SampleScene : MonoBehaviour
 {
     public void MenuReturn()
     {
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadSceneAsync(1);
     }
 }
