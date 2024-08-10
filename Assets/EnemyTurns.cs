@@ -55,6 +55,7 @@ public class EnemyTurns : MonoBehaviour
         if(playerHealthBar.hp <= 0)
         {
             SceneManager.LoadScene(3);
+            GlobalScore.totalScore = scoreCount;
             StaticData.finalScore = scoreCount;
         }
 

@@ -11,6 +11,8 @@ public class SetFinalScore : MonoBehaviour
     public void Start()
     {
         scoreText = GameObject.FindGameObjectWithTag("FinalScoreText").GetComponent<Text>();
-        scoreText.text = "Final Score: " + StaticData.finalScore;
+        Debug.Log("test score   : "+ GlobalScore.totalScore);
+        scoreText.text = "Final Score: " + GlobalScore.totalScore;
+        Debug.Log("test score 2 :" + GlobalScore.totalScore);
     }
 }
