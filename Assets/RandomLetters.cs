@@ -40,7 +40,7 @@ public class RandomLetters : MonoBehaviour
     //for verifying a word and determining its score (API did not work on mobile)
     public string wordSpelled;
     public int wordScore;
-    //public SpellChecker spellChecker; - Does not work on mobile unfortunately
+    public SpellChecker spellChecker; 
 
 
     // Modules containing battle functions
@@ -66,6 +66,7 @@ public class RandomLetters : MonoBehaviour
        nextClonePos = cloneStartPos;
        wordSpelled = string.Empty;
        wordScore = 0;
+       spellChecker = new SpellChecker();
 
         for (int i = 0; i < 16; i++){
 
@@ -308,10 +309,10 @@ public class RandomLetters : MonoBehaviour
         {
             Debug.Log($"Sprite: {detail.sprite.name}, Value: {detail.value}, Character: {detail.character}");
         }
-        //if (spellChecker != null)
-        //{
-            //if (spellChecker.CheckWord(wordSpelled))
-            //{
+        if (spellChecker != null)
+        {
+            if (spellChecker.CheckWord(wordSpelled))
+            {
                 Debug.Log($"Word is valid, Score is {wordScore}");
                 int playerDamage = wordScore;
                 PlayerAnimLogic.instance.PlayValidWordAnimation();
@@ -320,16 +321,16 @@ public class RandomLetters : MonoBehaviour
                 enemyTurns.DamageEnemy(playerDamage);
                
 
-            //}
-            //else
-            //{
-            //    Debug.Log($"Word is NOT valid");
-            //}
-        //}
-        //else
-        //{
-        //    Debug.LogError("spellChecker is not initialized!");
-        //}
+            }
+            else
+            {
+                Debug.Log($"Word is NOT valid");
+            }
+        }
+        else
+        {
+            Debug.LogError("spellChecker is not initialized!");
+        }
     }
 
     //function responsible for replacing used letters with random ones
