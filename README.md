@@ -1,3 +1,3 @@
 # mobdeve_mco
  
-latest apk found here: https://drive.google.com/file/d/1UPTPDXPZsgbehXxWSg74P-f-uIfKEbAF/view?usp=drive_link
+latest apk found here: https://drive.google.com/drive/folders/1vkxMb3RUgwK8UcFjecB3Mopt6BkxMjCg?usp=sharing
