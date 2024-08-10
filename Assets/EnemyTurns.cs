@@ -2,6 +2,7 @@
 //using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class EnemyTurns : MonoBehaviour
@@ -50,6 +51,12 @@ public class EnemyTurns : MonoBehaviour
         int maxDmg = 7;
         int damage = Random.Range(minDmg, maxDmg);
         playerHealthBar.TakeDamage(damage);
+
+        if(playerHealthBar.hp <= 0)
+        {
+            SceneManager.LoadScene(3);
+            StaticData.finalScore = scoreCount;
+        }
 
     }
     // Both start at 30hp, player heals 10hp after each kill
