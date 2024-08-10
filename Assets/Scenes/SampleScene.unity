@@ -1661,6 +1661,7 @@ GameObject:
   m_Component:
   - component: {fileID: 977298319}
   - component: {fileID: 977298318}
+  - component: {fileID: 977298320}
   m_Layer: 0
   m_Name: InputLine
   m_TagString: PaperBg
@@ -1735,6 +1736,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1421864474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!225 &977298320
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977298317}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &992047614
 GameObject:
   m_ObjectHideFlags: 0
@@ -2087,7 +2100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1040975101}
   - component: {fileID: 1040975100}
-  - component: {fileID: 1040975099}
+  - component: {fileID: 1040975102}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -2095,22 +2108,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1040975099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1040975098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9864053e5bb3a7d4380eddcf2787de5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minimumDistance: 0.2
-  maximumTime: 1
-  directionThreshold: 0.9
-  trail: {fileID: 1286949983}
 --- !u!114 &1040975100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2138,6 +2135,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1040975102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040975098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9864053e5bb3a7d4380eddcf2787de5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumDistance: 0.4
+  maximumTime: 1
+  directionThreshold: 0.9
+  trail: {fileID: 1286949983}
+  paperAnim: {fileID: 0}
+  playerAnimLogic: {fileID: 0}
 --- !u!1 &1042212467
 GameObject:
   m_ObjectHideFlags: 0
@@ -3633,6 +3648,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1866023822}
   - component: {fileID: 1866023821}
+  - component: {fileID: 1866023824}
+  - component: {fileID: 1866023823}
   m_Layer: 0
   m_Name: PaperBG
   m_TagString: PaperBg
@@ -3701,12 +3718,46 @@ Transform:
   m_GameObject: {fileID: 1866023820}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.9820584, y: -393.50632, z: 594}
+  m_LocalPosition: {x: -1.982058, y: -393.50632, z: 594}
   m_LocalScale: {x: 69.37211, y: 69.37211, z: 198.20602}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1421864474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1866023823
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866023820}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 330997bd7d45ceb4780035802e445e93, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1866023824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866023820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0babc996d12257418275e6a4b4dc0ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animatorGameObject: {fileID: 1866023820}
 --- !u!1 &1910944831
 GameObject:
   m_ObjectHideFlags: 0

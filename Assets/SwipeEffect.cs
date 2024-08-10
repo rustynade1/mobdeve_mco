@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class SwipeEffect : MonoBehaviour
+public class SwipeEffect : MonoBehaviour, IDragHandler
 {
-    // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
-        
+        Debug.Log("hi startign");
+    }
+    public void OnDrag(PointerEventData eventData) { 
+        transform.localPosition= new Vector2(transform.localPosition.x, transform.localPosition.y + eventData.delta.y);
+        Debug.Log("hi");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
